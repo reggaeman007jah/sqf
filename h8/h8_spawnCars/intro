@@ -1,0 +1,9 @@
+link:
+
+to use:
+
+Place marker in editor, called mkr, this is used to get road positions around this marker
+
+Place a trigger, radio alpha, which activates: 
+
+    null = ["mkr"] execVM "spawnVeh.sqf";
