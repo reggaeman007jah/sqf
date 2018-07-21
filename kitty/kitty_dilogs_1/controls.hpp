@@ -7,9 +7,8 @@ class dialogTest
 
     {
 
-PASTE YOUR CONTROLS CONTENT IN HERE
+        PASTE YOUR CONTROLS CONTENT IN HERE
 
     };
-
 
 };
