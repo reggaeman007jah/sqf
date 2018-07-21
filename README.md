@@ -1,3 +1,3 @@
 # sqf
 
-This is a rowing collection of SQF knowledge gained from YouTube .. an dmaybe also some of my own work..
+This is a growing collection of SQF knowledge gained from YouTube .. and maybe also some of my own work..
