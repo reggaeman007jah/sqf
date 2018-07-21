@@ -1,19 +1,23 @@
 
+URL: TBC
+This demonstrates how to create a Kill / Teleport dialog
+
+
 go into arma mission and open GUI editor
 rightclick 
-always se SAFEZONE
+remember to always use SAFEZONE with your dialogs
 
-RSC Frame
-
-RSC Listbox
+use:
+    RSC Frame
+    RSC Listbox
 
 place listbox over Frame
 
-ad classname to listbox
+add classname to listbox
 
 add button (with class,and text for name of butotn)
 
-go into ission folder and create two HPP files
+go into mission folder and create two HPP files
 
 so make description.ext,to add hpp links
 
@@ -30,13 +34,13 @@ go bakc into GUI editor and press CTRL + P to copy full list of defines
 then go into defines.hpp and press CTRL + V to paste 1500 lines of controls
 then open controls.hpp
 then go back into editor GUI, and press CTRL + SHFT + S to open save dialog, 
-save it as test r whatever, 
+save it as dialogTest
 then go back to controls.hpp and paste in there the content you just saved
 so here should be just frame listbox ad button
 
 so you need to add a container class for the whole thing,
 
-so befor epasting do this:
+so before pasting do this:
 
 class dialogTest
 {
@@ -200,9 +204,61 @@ playerListArray = [];
     
     } forEach allUnits;
 
+// next ... teleport
+
+// so go into the gUI edtr again and hit CTRL + I for the config path
+
+// in the path write:
+
+missionConfigFile >> "dialogTest";
+
+// this will brig back your GUI as before
+
+//copy and paste the kill btton, call new buton Teleport To, class: Teleport,name the button also
+
+// CTRL Shift S to export the new version of the config (save the dialog agaib using the same title as before)
+
+// when pasting back into your config.hpp, make sure you either select and ovrewrite the prvsious config,
+// or paste the new config and delete the old..
+
+// with the new button config, change the path to: "teleportToUnit.sqf"
+
+// the teleportToUnit.sqf code is:
+
+_index = lbCurSel 1500;
+_unit = playerListArray select _index;
+_pos = getPosATL _unit;
+
+player setPosATL [_pos select 0, _pos select 1, _pos select 2];
+
+// last thing, fix issue when nothing is selected and Kill is pressed .. you get errors ..so
+// to fix, always have the script select the first item in the list, that way there is always at least one selectable item
+// the command to use here is 'lbSetCur[sor]Selected'
+// use this 'after' the script has selected all the units in openDialog.sqf
 
 
+    createDialog "dialogTest";
 
+    _ctrl = (findDisplay 1234 ) displayCTRL 1500;
+
+    playerListArray = [];
+
+    {
+        playerListArray pushback _x;
+        _name = name _x;
+        _side = side _x;
+
+        lbAdd [1500, _name];
+
+        switch (_side) do
+            {
+                case WEST: {lbSetColor [1500, _forEachindex, [0,0,1,1]];}; //blue
+                case EAST: {lbSetColor [1500, _forEachindex, [1,0,0,1]];}; //red
+            }
+    
+    } forEach allUnits;
+
+    lbSetCurSel [1500, 0];
 
 
 
