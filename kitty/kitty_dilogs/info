@@ -1,0 +1,216 @@
+
+go into arma mission and open GUI editor
+rightclick 
+always se SAFEZONE
+
+RSC Frame
+
+RSC Listbox
+
+place listbox over Frame
+
+ad classname to listbox
+
+add button (with class,and text for name of butotn)
+
+go into ission folder and create two HPP files
+
+so make description.ext,to add hpp links
+
+then create:
+                defines.hpp
+                controls.hpp
+
+open description.ext
+
+#defines.hpp
+#controls.hpp
+
+go bakc into GUI editor and press CTRL + P to copy full list of defines
+then go into defines.hpp and press CTRL + V to paste 1500 lines of controls
+then open controls.hpp
+then go back into editor GUI, and press CTRL + SHFT + S to open save dialog, 
+save it as test r whatever, 
+then go back to controls.hpp and paste in there the content you just saved
+so here should be just frame listbox ad button
+
+so you need to add a container class for the whole thing,
+
+so befor epasting do this:
+
+class dialogTest
+{
+    idd = 1234;
+
+    class controls
+
+    {
+
+PASTE YOUR CONTROLS CONTENT IN HERE
+
+    };
+
+
+};
+
+
+then create an initPlayerLocal, and create in there an addAction to open the dialog on requets:
+
+player addAction ["open ze dialog", {execVM "openDialog.sqf"};];
+
+now create the file --- openDialog.sqf in your mission folder
+
+
+in the file:
+
+createDialog "dialogTest";
+//i.e.this ^^^ is the parent class for all of the dialog stuff you are about to create
+
+
+the standard button will flash
+
+to resolve, serch for RSC Button in the main controls 150 list
+
+under the RSCButton class, change the colorBackground from 0,0,0,0.5 to 0,0,0,0.7 
+the last value you ae canging here is the alpha value,with 0 as fully transparent, 1 as no transparent
+
+
+to send player names to the lcal list, use LBADD to add a string to the list 
+
+to do this you need two controls:
+    DISPLAYCTRL and FINDDISPLAY
+
+so, the openDialog.sqf file needs to loklike:
+
+createDialog "dialogTest";
+
+_ctrl = (findDisplay 1234 ) displayCTRL 1500;
+// findDisplay needs the IDD
+//so now we have access to our listbox via _ctrl
+// let's test:
+
+createDialog "dialogTest";
+
+_ctrl = (findDisplay 1234 ) displayCTRL 1500;
+lbAdd [1500, "Test"];
+or this works too:
+_ctrl lbAdd "test";
+
+let's expand this:
+
+createDialog "dialogTest";
+_ctrl = (findDisplay 1234 ) displayCTRL 1500;
+lbAdd [1500, "Test"];
+{} forEach allPlayers;
+// all players does not include AIs, so instead use allUnits:
+
+createDialog "dialogTest";
+_ctrl = (findDisplay 1234 ) displayCTRL 1500;
+lbAdd [1500, "Test"];
+{} forEach allUnits;
+
+// now let's use magic var x:
+
+createDialog "dialogTest";
+_ctrl = (findDisplay 1234 ) displayCTRL 1500;
+{
+    _name = name _x;
+    lbAdd [1500, _name];
+} forEach allUnits;
+
+// now the above code will names of all players and units in the game, in the list box
+
+// next, lets extract names and send them to an array:
+
+createDialog "dialogTest";
+_ctrl = (findDisplay 1234 ) displayCTRL 1500;
+playerListArray = [];
+{
+    playerListArray pushback _x;
+    _name = name _x;
+    lbAdd [1500, _name];
+} forEach allUnits;
+
+// I balieve the new code above will push anything _x to playerListArray, using the same index
+// index is useful for selection
+
+// now create new file: killUnit.sqf, then create an action line of code in control.hpp:
+// this line goes at the bottom of the code block under the sub-class buttonKill: RSCButton
+// note, the next line has quotes within qutes, and therefore needs " ' ' " construct:
+
+action = "execVM 'killUnit.sqf'";
+
+// now open killunit.sqf
+// here we use lbCurSel to grab index of selected item
+
+_index = lbCurSel 1500;
+_unit = playerListArray select _index;
+//debug
+hint str _unit;
+
+// all good, now do:
+
+_index = lbCurSel 1500;
+_unit = playerListArray select _index;
+_unit setdamage 1;
+// this ^^ will killthe selected unit
+
+
+// next let's add a switch command to show colours based on side, using lbSetColor
+// in opendialog.sqf:
+
+createDialog "dialogTest";
+
+_ctrl = (findDisplay 1234 ) displayCTRL 1500;
+playerListArray = [];
+
+{
+    playerListArray pushback _x;
+    _name = name _x;
+    _side = side _x;
+    switch (_side) do
+        {
+            case WEST: {lbSetColor [1500, _forEachindex, [0,0,1,1]];}; //blue
+            case EAST: {lbSetColor [1500, _forEachindex, [1,0,0,1]];}; //red
+        }
+    lbAdd [1500, _name];
+} forEach allUnits;
+
+// note, the above does not work, as we are setting the colour for something that does not yet exist
+// so instead, do this:
+
+    createDialog "dialogTest";
+
+    _ctrl = (findDisplay 1234 ) displayCTRL 1500;
+
+    playerListArray = [];
+
+    {
+        playerListArray pushback _x;
+        _name = name _x;
+        _side = side _x;
+
+        lbAdd [1500, _name];
+
+        switch (_side) do
+            {
+                case WEST: {lbSetColor [1500, _forEachindex, [0,0,1,1]];}; //blue
+                case EAST: {lbSetColor [1500, _forEachindex, [1,0,0,1]];}; //red
+            }
+    
+    } forEach allUnits;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
