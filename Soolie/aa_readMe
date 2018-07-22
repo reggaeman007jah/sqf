@@ -1,0 +1,48 @@
+
+mission folder contains:
+    dialog folder
+    description.ext
+    init.sqf
+    mission.sqm
+
+dalog folder contains:
+    common.hpp // holds all base classes for controls
+    tut_fnc_veh.sqf // fncs that make everything work
+    tut_gui_veh.hpp // dialog itself, with customer classes
+
+----------------------------------------------------------------------
+init.sqf
+
+enableSaving [false, false];
+player enableFatigue false,
+
+_vehDialog = [] spawn compile preprocessFileLineNumbers "dialog\TUT_fnc_veh.sqf";
+waitUntil {scriptDonw _vehdialog};
+
+act1 = player addAction ["<t color - ""#ff3300"" >" + ("Vehicle Selector") + "</>",
+    {
+        [] call TUT_fnc_openVehUI;
+    },"",0.03,false,false];
+
+------------------------------------------------------------------------
+description.ext
+
+onloadName = "vehicle Selector";
+author = "Soolie";
+onloadMission = "Tutorial";
+
+#include "dialog\common.hpp"
+#include "dialog\TUT_gui_veh.hpp"
+
+class RscTitles
+{
+    #include "dialog\TUT_gui_veh.hpp"
+};
+
+--------------------------------------------------------------------------
+common.hpp
+
+allbase classes go here
+
+--------------------------------------------------------------------------
+
