@@ -1,0 +1,19 @@
+
+sketch ideas for marker colours changing by presence
+
+while {true} do
+
+    {
+       _pos = _unit position;
+       create marker using position
+       switch fr side, ofpor is red etc
+
+
+
+sleep 5;
+    } forEach allUnits
+
+
+    all allUnits
+    foreach
+    create marker using pos of each unit.

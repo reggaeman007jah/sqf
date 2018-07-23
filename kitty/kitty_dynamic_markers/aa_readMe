@@ -1,0 +1,36 @@
+
+SKG provided code to enable dynamic markers, created per oopfor unit,starting large and becoming smaller as they approach a base marker
+
+I really appreciate this - I was after a general steer in architecture, but instead he wrote the whole thing..
+
+SKG wrote:
+
+i misunderstood what you were asking when i first read it, i made it so it creates a group of opfor units on a random marker 
+and has them run towards the base and after x amount of opfor units have been killed it spawns in more that also run towards the base. 
+
+anyhow i have the marker system done, you went way to complex for it lol and you also want it to only run when the player has his map 
+open so it doesnt mess with performance. so its like this for the markers. create a global boolean variable(mapOpen) that you can toggle 
+on/off. then you create a function, inside that function you need a multi-dimensional array(_markers) that is global to the function to 
+store the reference to the unit and the reference to the marker for that unit. then you use the forEach command, create an array inside 
+the forEach command(_data) and then create a local marker for the unit on their position and set the color to that units side as well as 
+the type/shape, then it will store the reference to the unit and the reference to the marker inside of _data, then it will store _data 
+inside the _markers array. this way ever slot in the _markers array will hold the unit and the marker for that unit.
+
+now we create a while loop inside of that function above that runs only when the map is open, if the map is closed then it ends the loop. 
+have a forEach command inside the loop and do it for _markers, inside the forEach have it select the first element which is the unit and 
+the second element which is the marker for that unit, then we want to use setMarkerPosLocal to move the marker to the position of the unit 
+its assigned to, then to alter the size of the marker so the marker is bigger the further away from the base the unit is, we get the 
+distance of the unit from the base marker and multiply it by (0.something) to make the marker size smaller(otherwise it will be MASSIVE), 
+i used 0.08 as that seemed like a decent size. in order to make it so only the AI units had the marker size effect we do a simple if 
+statement to check if the unit is a player, if the unit is not a player then it sets the marker size to the size we just stated in the 
+last sentence.
+
+script for the markers
+https://paste.ofcode.org/7Tb9YE8LUDjiLtF89pZFN
+
+script for making the ai spawn in waves and target the base
+https://paste.ofcode.org/38TSV2yRPpqUv2TWXPqDB8G
+
+heres an example video
+https://youtu.be/XI9SotGfCl8﻿
+

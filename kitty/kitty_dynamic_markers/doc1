@@ -1,0 +1,43 @@
+mapOpen = false;
+
+showMapMarkers =
+{
+    _markers = [];
+	{
+		_data = [];
+		_markName = name _x;
+		_mrk = createMarkerLocal [_markName, position _x];
+		_markName setMarkerColorLocal ([side _x, true] call BIS_fnc_sideColor);
+		_markName setMarkerShapeLocal "ICON";
+		_markName setMarkerTypeLocal "mil_dot";
+		_data pushBack _x;
+		_data pushBack _markName;
+		_markers pushBack _data;
+	} forEach allUnits;	
+	
+	while {mapOpen} do
+	{
+		if !(visibleMap) then{mapOpen = false;};
+		
+		{
+			_unit = _x select 0; _marker = _x select 1;
+			_marker setMarkerPosLocal position _unit;
+			if !(isPlayer _unit) then
+			{
+                _size = (_unit distance getMarkerPos "baseMarker") * 0.08;
+				_marker setMarkerSizeLocal [_size, _size];
+			};
+		} forEach _markers;
+		sleep 0.01;
+	};
+};
+
+while {true} do
+{
+	if (visibleMap && !mapOpen) then
+	{
+		mapOpen = true;
+		call showMapMarkers;
+	};
+	sleep 0.1;
+};

@@ -1,0 +1,30 @@
+
+ 
+deadOpfor = 0;
+neededOpforRespawn = 3;
+
+"opforKilled" addPublicVariableEventHandler
+{
+    deadOpfor = deadOpfor + 1;
+	if (deadOpfor isEqualTo neededOpforRespawn) then
+	{
+		neededOpforRespawn = neededOpforRespawn + 3;
+		call spawnOpforGrp;
+	};
+};
+
+spawnOpforGrp =
+{
+	_pos = selectRandom ["opSpawn_1", "opSpawn_2", "opSpawn_3"];
+	_grp = [getMarkerPos _pos, EAST, 5] call BIS_fnc_spawnGroup;
+	_wp = _grp addWaypoint [getMarkerPos "baseMarker", 150];
+	_wp setWaypointType "MOVE";
+	{
+		_x addEventHandler ["Killed",
+		{
+			publicVariableServer "opforKilled";
+		}];
+	} forEach units _grp;
+};
+
+call spawnOpforGrp;
